@@ -1,0 +1,17 @@
+# Build
+controller/build/
+*.o *.a
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Runtime
+/tmp/appliance-sim.sock
+
+# IDE
+.vscode/
+.idea/
+*.DS_Store

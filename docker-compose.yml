@@ -1,0 +1,41 @@
+services:
+
+  simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    command: ["uv", "run", "python", "simulator.py"]
+    environment:
+      SOCKET_PATH: /tmp/shared/appliance-sim.sock
+    volumes:
+      - socket-vol:/tmp/shared
+    restart: unless-stopped
+
+  controller:
+    build:
+      context: .
+      dockerfile: Dockerfile.controller
+    volumes:
+      - socket-vol:/tmp/shared
+    ports:
+      - "8080:8080"
+    depends_on:
+      - simulator
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    environment:
+      CONTROLLER_URL: http://controller:8080
+    volumes:
+      - socket-vol:/tmp/shared
+    ports:
+      - "8099:8099"
+    depends_on:
+      - controller
+    restart: unless-stopped
+
+volumes:
+  socket-vol:
