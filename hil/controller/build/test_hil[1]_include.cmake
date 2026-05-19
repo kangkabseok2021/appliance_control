@@ -1,5 +1,0 @@
-if(EXISTS "/Users/kab/Projects/Portfolio/appliance_control/hil/controller/build/test_hil[1]_tests.cmake")
-  include("/Users/kab/Projects/Portfolio/appliance_control/hil/controller/build/test_hil[1]_tests.cmake")
-else()
-  add_test(test_hil_NOT_BUILT test_hil_NOT_BUILT)
-endif()

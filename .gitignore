@@ -1,5 +1,6 @@
 # Build
 controller/build/
+hil/controller/build/
 *.o *.a
 
 # Python
