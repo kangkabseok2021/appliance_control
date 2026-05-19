@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Washer FSM C++ ────────────────────────────────────────────────────────
+  washer-cpp:
+    name: Washer C++ (GoogleTest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B controller/build -S controller -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_DEFAULT_CMP0135=NEW
+
+      - name: Build
+        run: cmake --build controller/build -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir controller/build --output-on-failure -V
+
+  # ── HiL FSM C++ ───────────────────────────────────────────────────────────
+  hil-cpp:
+    name: HiL C++ (GoogleTest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B hil/controller/build -S hil/controller -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_DEFAULT_CMP0135=NEW
+
+      - name: Build
+        run: cmake --build hil/controller/build -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir hil/controller/build --output-on-failure -V
+
+  # ── HiL ARM64 cross-compile check ─────────────────────────────────────────
+  hil-arm64:
+    name: HiL ARM64 cross-compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ARM64 cross-compiler
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - name: Cross-compile for ARM64
+        run: |
+          cmake -B hil/controller/build-arm64 -S hil/controller \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_POLICY_DEFAULT_CMP0135=NEW \
+            --toolchain hil/controller/cmake/toolchain-arm64.cmake
+          cmake --build hil/controller/build-arm64 --target hil_controller -j$(nproc)
+
+  # ── Python tests (washer + HiL) ───────────────────────────────────────────
+  python:
+    name: Python pytest (washer + HiL)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run all pytest
+        run: uv run pytest -v --tb=short
