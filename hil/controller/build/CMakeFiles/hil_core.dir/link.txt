@@ -1,0 +1,2 @@
+/usr/bin/ar qc libhil_core.a CMakeFiles/hil_core.dir/src/HilFsm.cpp.o CMakeFiles/hil_core.dir/src/MqttClient.cpp.o
+/usr/bin/ranlib libhil_core.a

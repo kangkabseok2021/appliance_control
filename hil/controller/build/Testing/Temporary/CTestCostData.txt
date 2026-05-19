@@ -1,0 +1,18 @@
+FsmTest.StartsInStandby 1 0.00407554
+FsmTest.StandbyToInitialisingOnFirstStep 1 0.00285533
+FsmTest.InitialisingRequiresValidFrames 1 0.00178062
+FsmTest.RunningAfterEnoughValidFrames 1 0.00162833
+FsmTest.HighTempCausesFault 1 0.00174129
+FsmTest.HighPressureCausesFault 1 0.00159075
+FsmTest.EmergencyStopFromRunning 1 0.00151854
+FsmTest.ResetFromFaultToStandby 1 0.00155875
+FsmTest.ResetFromEmergencyStop 1 0.00161558
+FsmTest.InvalidResetFromRunningIgnored 1 0.00175083
+FsmTest.SetpointSlowsConveyorOnHighTemp 1 0.00162983
+FsmTest.SetpointRequestsCoolingAbove60C 1 0.00150029
+FsmTest.TransitionHistoryRecorded 1 0.00155863
+MqttClientTest.DefaultNotConnected 1 0.00155717
+MqttClientTest.ConnectToNonexistentBrokerReturnsFalse 1 0.00234133
+MqttClientTest.PublishWhenDisconnectedReturnsFalse 1 0.00163342
+MqttClientTest.DisconnectIdempotent 1 0.00155008
+---

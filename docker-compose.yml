@@ -37,5 +37,41 @@ services:
       - controller
     restart: unless-stopped
 
+  # ── HiL Edge Testbed services ────────────────────────────────────────────
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./hil/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -t '$$SYS/#' -C 1 -W 2 || exit 1"]
+      interval: 5s
+      retries: 10
+
+  hil-simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    command: ["uv", "run", "python", "hil/simulator_hil.py"]
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    restart: unless-stopped
+
+  hil-controller:
+    build:
+      context: hil/controller
+      dockerfile: ../../Dockerfile.controller
+    command: ["./hil_controller", "mosquitto", "1883"]
+    depends_on:
+      - hil-simulator
+    restart: unless-stopped
+
 volumes:
   socket-vol:
