@@ -50,11 +50,16 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Cross-compile for ARM64
+        # Tests disabled — cannot run ARM64 binaries on x86 without QEMU
         run: |
           cmake -B hil/controller/build-arm64 -S hil/controller \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_POLICY_DEFAULT_CMP0135=NEW \
-            --toolchain hil/controller/cmake/toolchain-arm64.cmake
+            -DBUILD_TESTS=OFF \
+            -DCMAKE_C_COMPILER=/usr/bin/aarch64-linux-gnu-gcc \
+            -DCMAKE_CXX_COMPILER=/usr/bin/aarch64-linux-gnu-g++ \
+            -DCMAKE_SYSTEM_NAME=Linux \
+            -DCMAKE_SYSTEM_PROCESSOR=aarch64
           cmake --build hil/controller/build-arm64 --target hil_controller -j$(nproc)
 
   # ── Python tests (washer + HiL) ───────────────────────────────────────────

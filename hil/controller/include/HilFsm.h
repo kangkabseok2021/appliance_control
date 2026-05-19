@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <mutex>
 #include <string>
+#include <vector>
 
 // Five-state HiL manufacturing FSM
 enum class HilState { STANDBY, INITIALISING, RUNNING, FAULT, EMERGENCY_STOP };
