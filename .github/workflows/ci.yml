@@ -81,6 +81,34 @@ jobs:
       - name: Run 18 GoogleTests
         run: ctest --test-dir build-batch --output-on-failure -V
 
+  # ── Bare-Metal FOC Engine — Unity C tests + Python model tests ──────────
+  bare-metal-foc:
+    name: Bare-Metal FOC — Unity C tests + Python SciPy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lcov + gcc
+        run: sudo apt-get update -qq && sudo apt-get install -y lcov gcc cmake ninja-build
+
+      - name: Configure
+        run: >
+          cmake -S bare_metal_foc -B build-foc
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_POLICY_DEFAULT_CMP0135=NEW
+          -GNinja
+
+      - name: Build
+        run: cmake --build build-foc --parallel
+
+      - name: Run Unity tests
+        run: ctest --test-dir build-foc --output-on-failure -V
+
+      - name: Python SciPy tests
+        run: |
+          pip install scipy numpy pytest --quiet
+          pytest bare_metal_foc/tests_python/ -v --tb=short
+
   # ── Python tests (washer + HiL) ───────────────────────────────────────────
   python:
     name: Python pytest (washer + HiL)
