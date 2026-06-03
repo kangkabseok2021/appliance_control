@@ -97,6 +97,20 @@ docker compose up mosquitto hil-simulator hil-controller  # HiL only
 docker compose up                                   # Everything
 ```
 
+**Run C++ tests without Docker:**
+
+```bash
+# Washer — 12 GoogleTests
+cmake -S controller -B build-washer -DCMAKE_BUILD_TYPE=Release
+cmake --build build-washer --parallel
+ctest --test-dir build-washer --output-on-failure -V
+
+# HiL — 17 GoogleTests
+cmake -S hil/controller -B build-hil -DCMAKE_BUILD_TYPE=Release
+cmake --build build-hil --parallel
+ctest --test-dir build-hil --output-on-failure -V
+```
+
 ### Batch Mixer SCADA (standalone CMake)
 
 ```bash

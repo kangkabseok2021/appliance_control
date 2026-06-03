@@ -64,7 +64,7 @@ jobs:
 
   # ── Batch Mixer SCADA C++20 ──────────────────────────────────────────────
   batch-mixer-cpp:
-    name: Batch Mixer SCADA — 18 GoogleTests (C++20)
+    name: Batch Mixer SCADA — 20 GoogleTests (C++20)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
       - name: Build
         run: cmake --build build-batch --parallel
 
-      - name: Run 18 GoogleTests
+      - name: Run 20 GoogleTests
         run: ctest --test-dir build-batch --output-on-failure -V
 
   # ── Bare-Metal FOC Engine — Unity C tests + Python model tests ──────────
