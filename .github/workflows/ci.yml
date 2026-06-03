@@ -62,6 +62,25 @@ jobs:
             -DCMAKE_SYSTEM_PROCESSOR=aarch64
           cmake --build hil/controller/build-arm64 --target hil_controller -j$(nproc)
 
+  # ── Batch Mixer SCADA C++20 ──────────────────────────────────────────────
+  batch-mixer-cpp:
+    name: Batch Mixer SCADA — 18 GoogleTests (C++20)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: >
+          cmake -S batch_mixer_scada -B build-batch
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_POLICY_DEFAULT_CMP0135=NEW
+
+      - name: Build
+        run: cmake --build build-batch --parallel
+
+      - name: Run 18 GoogleTests
+        run: ctest --test-dir build-batch --output-on-failure -V
+
   # ── Python tests (washer + HiL) ───────────────────────────────────────────
   python:
     name: Python pytest (washer + HiL)
