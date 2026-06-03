@@ -1,12 +1,12 @@
 # Appliance Control, HiL Edge Testbed & Batch Mixer SCADA
 
-Three embedded / industrial-control projects in one repository — sharing a C++ HAL pattern, asyncio Python simulation, and Docker infrastructure.
+Three embedded / industrial-control projects in one repository — all C++20, sharing a HAL pattern, asyncio Python simulation, and Docker infrastructure.
 
 | Project | Language | Description |
 |---|---|---|
-| **Washer FSM** | C++17 + Python | Washing-cycle state machine + Python simulator over Unix socket + FastAPI dashboard |
-| **HiL Edge Testbed** | C++17 + Python | MQTT control loop on ARM64 edge hardware + Python physics simulator + aiosqlite telemetry |
-| **Batch Mixer SCADA** | C++20 | 5-state industrial FSM · C++20 `BatchComponent` Concept · `std::jthread` PressureGuard · TwinCAT ADS stub · PostgreSQL schema · Win32 Service · PowerShell scripts |
+| **Washer FSM** | C++20 + Python | Washing-cycle state machine + Python simulator over Unix socket + FastAPI dashboard |
+| **HiL Edge Testbed** | C++20 + Python | MQTT control loop on ARM64 edge hardware + Python physics simulator + aiosqlite telemetry |
+| **Batch Mixer SCADA** | C++20 | 5-state industrial FSM · `BatchComponent` Concept · `std::jthread` PressureGuard · TwinCAT ADS stub · PostgreSQL schema · Win32 Service · PowerShell scripts |
 
 ---
 
@@ -46,7 +46,7 @@ appliance_control/
 │   │   ├── Backup-BatchDB.ps1    pg_dump → zip → retain 7 days + Event Log
 │   │   ├── Install-Service.ps1   New-Service + sc.exe failure recovery
 │   │   └── Uninstall-Service.ps1 Stop-Service + sc delete
-│   └── CMakeLists.txt       C++20, SHARED lib guard, FetchContent GTest, Win32 exe
+│   └── CMakeLists.txt       C++20, STATIC batch_mixer_lib, FetchContent GTest, Win32 exe
 ├── docs/
 │   ├── washer.md            Washer system documentation
 │   └── hil.md               HiL testbed documentation
@@ -97,8 +97,8 @@ Five jobs on every push to `main`:
 
 | Job | Runner | What it validates |
 |---|---|---|
-| `washer-cpp` | ubuntu-latest | Washer C++ build + 12 GoogleTests |
-| `hil-cpp` | ubuntu-latest | HiL C++ build + 17 GoogleTests |
-| `hil-arm64` | ubuntu-latest | Cross-compile `hil_controller` for aarch64-linux-gnu |
+| `washer-cpp` | ubuntu-latest | Washer C++20 build + 12 GoogleTests |
+| `hil-cpp` | ubuntu-latest | HiL C++20 build + 17 GoogleTests |
+| `hil-arm64` | ubuntu-latest | Cross-compile `hil_controller` for aarch64-linux-gnu (C++20) |
 | `batch-mixer-cpp` | ubuntu-latest | Batch Mixer C++20 build + **20 GoogleTests** (FSM transitions + PressureGuard CR-001) |
 | `python` | ubuntu-latest | 27 pytest (9 washer + 13 HiL simulator + 5 HiL telemetry) |
